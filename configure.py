@@ -32,8 +32,10 @@ class Config:
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
-        self.loss_fig_path = os.path.join(self.fig_path, 'loss.png')
-        self.acc_fig_path = os.path.join(self.fig_path, 'acc.png')
+        self.conv1D_loss_fig_path = os.path.join(self.fig_path, 'Conv1D', 'loss.png')
+        self.conv1D_acc_fig_path = os.path.join(self.fig_path, 'Conv1D', 'acc.png')
+        self.TRM_loss_fig_path = os.path.join(self.fig_path, 'TRM', 'loss.png')
+        self.TRM_acc_fig_path = os.path.join(self.fig_path, 'TRM', 'acc.png')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')

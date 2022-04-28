@@ -53,7 +53,7 @@ def plot_loss_acc(history, cfg):
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.acc_fig_path)
+    plt.savefig(cfg.conv1D_acc_fig_path)
     plt.show()
 
     # plot loss figure
@@ -63,7 +63,7 @@ def plot_loss_acc(history, cfg):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.loss_fig_path)
+    plt.savefig(cfg.conv1D_loss_fig_path)
     plt.show()
 
 if __name__ == "__main__":
@@ -95,9 +95,9 @@ if __name__ == "__main__":
     y_pred = np.argmax(y_pred1, axis=1)
 
     # save f1, precision, and recall scores
-    scores = {"precision": precision_score(Y_test, y_pred, average="macro"),
-              "recall": recall_score(Y_test, y_pred, average="macro"),
-              "f1": f1_score(Y_test, y_pred, average="macro")}
+    scores = {"Conv1D_precision": precision_score(Y_test, y_pred, average="macro"),
+              "Conv1D_recall": recall_score(Y_test, y_pred, average="macro"),
+              "Conv1D_f1": f1_score(Y_test, y_pred, average="macro")}
     with open(cfg.scores_file_path, 'w') as outfile:
         json.dump(scores, outfile)
     outfile.close()
