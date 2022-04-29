@@ -25,10 +25,17 @@ class Config:
         self.mlp_dropout=0.3
         self.dropout=0.2
 
+        # parameters == DNN
+        self.units_h1 = 938
+        self.units_h2 = 1876
+        self.units_h3 = 3752
+        self.units_h4 = 4
+
         # model path
         self.model_path = os.path.join(self.project_path, 'models')
         self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D', 'model.h5')
         self.model_TRM_path = os.path.join(self.model_path, 'TRM', 'model.h5')
+        self.model_DNN_path = os.path.join(self.model_path, 'DNN', 'model.h5')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
@@ -36,6 +43,8 @@ class Config:
         self.conv1D_acc_fig_path = os.path.join(self.fig_path, 'Conv1D', 'acc.png')
         self.TRM_loss_fig_path = os.path.join(self.fig_path, 'TRM', 'loss.png')
         self.TRM_acc_fig_path = os.path.join(self.fig_path, 'TRM', 'acc.png')
+        self.DNN_loss_fig_path = os.path.join(self.fig_path, 'DNN', 'loss.png')
+        self.DNN_acc_fig_path = os.path.join(self.fig_path, 'DNN', 'acc.png')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')
