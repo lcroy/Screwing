@@ -29,16 +29,22 @@ def load_data(dataset):
 
 def conv1D_scr(input_shape, num_class):
     model = keras.Sequential()
-    model.add(layers.Conv1D(32, 7, input_shape=input_shape, activation='relu', padding='same'))
-    model.add(layers.MaxPool1D(3))
-    model.add(layers.Dropout(0.5))
 
-    model.add(layers.Conv1D(32, 7, activation='relu', padding='same'))
-    model.add(layers.MaxPool1D(3))
+    model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=input_shape, padding='same'))
+    model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu'))
     model.add(layers.Dropout(0.5))
+    model.add(layers.MaxPooling1D(pool_size=2))
 
-    model.add(layers.GlobalAvgPool1D())
+    model.add(layers.Conv1D(filters=32, kernel_size=3, activation='relu'))
+    model.add(layers.Dropout(0.5))
+    model.add(layers.MaxPooling1D(pool_size=2))
+
+    model.add(layers.Flatten())
+    model.add(layers.Dense(100, activation='relu'))
+    model.add(layers.Dropout(0.3))
+
     model.add(layers.Dense(num_class, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     print(model.summary())
 
