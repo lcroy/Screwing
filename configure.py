@@ -28,7 +28,7 @@ class Config:
         # parameters == DNN
         self.units_h1 = 938
         self.units_h2 = 1876
-        self.units_h3 = 3752
+        self.units_h3 = 938
         self.units_h4 = 4
 
         # model path
