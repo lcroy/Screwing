@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import json
 import pandas as pd
 
-
 from keras import layers
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
 

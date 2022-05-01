@@ -13,8 +13,6 @@ sys.path.append("..")
 from configure import Config
 
 
-
-
 # load dataset
 def load_data(dataset):
     # read the raw data file
