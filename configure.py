@@ -32,8 +32,8 @@ class Config:
         self.units_h3 = 938
         self.units_h4 = 4
 
-        # model path
-        self.model_path = os.path.join(self.project_path, 'models')
+        # model checkpoint path
+        self.model_path = os.path.join(self.project_path, 'checkpoints')
         self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D', 'model.h5')
         self.model_Conv1D_check_point_path = os.path.join(self.model_path, 'Conv1D')
         self.model_TRM_path = os.path.join(self.model_path, 'TRM', 'model.h5')
