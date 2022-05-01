@@ -6,10 +6,13 @@ import matplotlib.pyplot as plt
 import json
 import pandas as pd
 
+
 from keras import layers
-from configure import Config
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
 
+import sys
+sys.path.append("..")
+from configure import Config
 
 # load dataset
 def load_data(dataset):

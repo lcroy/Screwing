@@ -3,10 +3,15 @@ import keras
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-from keras import layers
-from configure import Config
-from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
 import json
+
+from keras import layers
+from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+
+import sys
+sys.path.append("..")
+from configure import Config
+
 
 
 

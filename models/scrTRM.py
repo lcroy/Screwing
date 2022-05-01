@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import json
 
 from keras import layers
-from configure import Config
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
-from tensorflow import keras
-from tensorflow.keras import layers
+
+import sys
+sys.path.append("..")
+from configure import Config
 
 
 # load dataset
