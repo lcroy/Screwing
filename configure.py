@@ -15,6 +15,7 @@ class Config:
         self.loss = 'sparse_categorical_crossentropy'  
         self.epochs = 200
         self.batch_size = 32
+        self.patience = 30
 
         # parameters == Transformer
         self.head_size=256
@@ -34,8 +35,11 @@ class Config:
         # model path
         self.model_path = os.path.join(self.project_path, 'models')
         self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D', 'model.h5')
+        self.model_Conv1D_check_point_path = os.path.join(self.model_path, 'Conv1D')
         self.model_TRM_path = os.path.join(self.model_path, 'TRM', 'model.h5')
+        self.model_TRM_check_point_path = os.path.join(self.model_path, 'TRM')
         self.model_DNN_path = os.path.join(self.model_path, 'DNN', 'model.h5')
+        self.model_DNN_check_point_path = os.path.join(self.model_path, 'DNN')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')

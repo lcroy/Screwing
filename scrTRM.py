@@ -125,8 +125,8 @@ if __name__ == '__main__':
     # get model summary
     model.summary()
 
-    # using early stopping for efficient
-    callbacks = [keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)]
+    # the training will stop if the accuracy is not improved after "patinence" epochs - using early stopping for efficient
+    callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
 
     # training model 
     history = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=cfg.epochs, batch_size=cfg.batch_size, callbacks=callbacks)

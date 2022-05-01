@@ -27,6 +27,8 @@ def load_data(dataset):
 
     return X_train, X_test, Y_train, Y_test
 
+
+# build model
 def conv1D_scr(input_shape, num_class):
     model = keras.Sequential()
 
@@ -49,6 +51,7 @@ def conv1D_scr(input_shape, num_class):
     print(model.summary())
 
     return model
+
 
 # plot the accuracy and loss
 def plot_loss_acc(history, cfg):
@@ -85,8 +88,11 @@ if __name__ == "__main__":
     opt = tf.optimizers.Adam(cfg.lr)
     model.compile(optimizer=opt, loss=cfg.loss, metrics='acc')
 
+    # the training will stop if the accuracy is not improved after "patinence" epochs - using early stopping for efficient
+    callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+
     # training model
-    history = model.fit(X_train, Y_train, epochs=cfg.epochs, batch_size=cfg.batch_size, validation_data=(X_test,Y_test))
+    history = model.fit(X_train, Y_train, epochs=cfg.epochs, batch_size=cfg.batch_size, validation_data=(X_test,Y_test), callbacks=callbacks)
 
     # save model
     model.save(cfg.model_Conv1D_path)
@@ -104,6 +110,6 @@ if __name__ == "__main__":
     scores = {"Conv1D_precision": precision_score(Y_test, y_pred, average="macro"),
               "Conv1D_recall": recall_score(Y_test, y_pred, average="macro"),
               "Conv1D_f1": f1_score(Y_test, y_pred, average="macro")}
-    with open(cfg.scores_file_path, 'w') as outfile:
+    with open(cfg.scores_file_path, 'a') as outfile:
         json.dump(scores, outfile)
     outfile.close()
