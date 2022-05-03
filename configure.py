@@ -9,6 +9,8 @@ class Config:
         self.data_folder_path = os.path.join(self.project_path, 'data')
         self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_tabular.dat')
         self.raw_aursad_D_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
+        # default raw aursad D
+        self.data_source = "raw_aursad_D"
 
         # parmeters == common
         self.num_class = 4
@@ -35,21 +37,15 @@ class Config:
 
         # model checkpoint path
         self.model_path = os.path.join(self.project_path, 'checkpoints')
-        self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D', 'model.h5')
-        self.model_Conv1D_check_point_path = os.path.join(self.model_path, 'Conv1D')
-        self.model_TRM_path = os.path.join(self.model_path, 'TRM', 'model.h5')
-        self.model_TRM_check_point_path = os.path.join(self.model_path, 'TRM')
-        self.model_DNN_path = os.path.join(self.model_path, 'DNN', 'model.h5')
-        self.model_DNN_check_point_path = os.path.join(self.model_path, 'DNN')
+        self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D')
+        self.model_TRM_path = os.path.join(self.model_path, 'TRM')
+        self.model_DNN_path = os.path.join(self.model_path, 'DNN')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
-        self.conv1D_loss_fig_path = os.path.join(self.fig_path, 'Conv1D', 'loss.png')
-        self.conv1D_acc_fig_path = os.path.join(self.fig_path, 'Conv1D', 'acc.png')
-        self.TRM_loss_fig_path = os.path.join(self.fig_path, 'TRM', 'loss.png')
-        self.TRM_acc_fig_path = os.path.join(self.fig_path, 'TRM', 'acc.png')
-        self.DNN_loss_fig_path = os.path.join(self.fig_path, 'DNN', 'loss.png')
-        self.DNN_acc_fig_path = os.path.join(self.fig_path, 'DNN', 'acc.png')
+        self.Conv1D_loss_acc_fig_path = os.path.join(self.fig_path, 'Conv1D')
+        self.TRM_loss_acc_fig_path = os.path.join(self.fig_path, 'TRM')
+        self.DNN_loss_acc_fig_path = os.path.join(self.fig_path, 'DNN')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')

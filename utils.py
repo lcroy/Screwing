@@ -42,7 +42,7 @@ def load_raw_data(dataset, expand_flag):
     return X_train, X_test, y_train, y_test
 
 # plot the accuracy and loss
-def plot_loss_acc(history, cfg):
+def plot_loss_acc(history, loss_img, acc_img):
     # plot accuracy figure
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
@@ -50,7 +50,7 @@ def plot_loss_acc(history, cfg):
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.conv1D_acc_fig_path)
+    plt.savefig(acc_img)
     plt.show()
 
     # plot loss figure
@@ -60,5 +60,5 @@ def plot_loss_acc(history, cfg):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.conv1D_loss_fig_path)
+    plt.savefig(loss_img)
     plt.show()

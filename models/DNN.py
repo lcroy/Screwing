@@ -1,6 +1,7 @@
 import tensorflow as tf
 import keras
 import json
+import os
 
 from keras import layers
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
@@ -28,11 +29,24 @@ def DNN_scr(input_shape, cfg):
 if __name__ == "__main__":
     cfg = Config()
 
-    # split data
-    # process the featured data
-    # X_train, X_test, y_train, y_test = load_feature_data(cfg.raw_aursad_path, expand_flag=False)
-    # process the raw data
-    X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_D_path, expand_flag=False)
+    # setup parameter based on the data source
+    data_source = cfg.data_source
+    if data_source == "raw_aursad_D":
+        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_D_path, expand_flag=False)
+        model_path = os.path.join(cfg.model_DNN_path, 'raw_model.h5')
+        loss_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'raw_loss.png')
+        acc_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'raw_acc.png')
+        precision = "raw_DNN_precision"
+        recall = "raw_DNN_recall"
+        f1 = "raw_DNN_f1"
+    else:
+        X_train, X_test, y_train, y_test = load_feature_data(cfg.raw_aursad_path, expand_flag=False)
+        model_path = os.path.join(cfg.model_DNN_path, 'feature_model.h5')
+        loss_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'feature_loss.png')
+        acc_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'feature_acc.png')
+        precision = "feature_DNN_precision"
+        recall = "feature_DNN_recall"
+        f1 = "feature_DNN_f1"
 
     # construct DNN
     model = DNN_scr(X_train.shape[1], cfg)
@@ -48,21 +62,21 @@ if __name__ == "__main__":
     history = model.fit(X_train, y_train, epochs=cfg.epochs, batch_size=cfg.batch_size, validation_data=(X_test,y_test), callbacks=callbacks)
 
     # save model
-    model.save(cfg.model_DNN_path)
+    model.save(model_path)
 
     # plot the acc and loss
-    plot_loss_acc(history, cfg)
+    plot_loss_acc(history, loss_img, acc_img)
 
     # get f1, precision and recall scores
-    model = keras.models.load_model(cfg.model_DNN_path)
+    model = keras.models.load_model(model_path)
 
     y_pred1 = model.predict(X_test)
     y_pred = np.argmax(y_pred1, axis=1)
 
     # save f1, precision, and recall scores
-    scores = {"DNN_precision": precision_score(y_test, y_pred, average="macro"),
-              "DNN_recall": recall_score(y_test, y_pred, average="macro"),
-              "DNN_f1": f1_score(y_test, y_pred, average="macro")}
+    scores = {precision: precision_score(y_test, y_pred, average="macro"),
+              recall: recall_score(y_test, y_pred, average="macro"),
+              f1: f1_score(y_test, y_pred, average="macro")}
     with open(cfg.scores_file_path, 'a') as outfile:
         json.dump(scores, outfile)
     outfile.close()
