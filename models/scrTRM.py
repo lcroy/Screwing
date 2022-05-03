@@ -54,14 +54,12 @@ def TRM_scr(
 
 
 if __name__ == '__main__':
-
     # get configure file
     cfg = Config()
 
     # setup parameter based on the data source
-    data_source = cfg.data_source
-    if data_source == "raw_aursad_D":
-        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_D_path, expand_flag=True)
+    if cfg.raw_data_source == True:
+        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=True)
         model_path = os.path.join(cfg.model_TRM_path, 'raw_model.h5')
         loss_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'raw_loss.png')
         acc_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'raw_acc.png')
@@ -69,7 +67,7 @@ if __name__ == '__main__':
         recall = "raw_TRM_recall"
         f1 = "raw_TRM_f1"
     else:
-        X_train, X_test, y_train, y_test = load_feature_data(cfg.raw_aursad_path, expand_flag=True)
+        X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=True)
         model_path = os.path.join(cfg.model_TRM_path, 'feature_model.h5')
         loss_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'feature_loss.png')
         acc_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'feature_acc.png')

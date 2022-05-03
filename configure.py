@@ -7,10 +7,10 @@ class Config:
 
         # dataset path
         self.data_folder_path = os.path.join(self.project_path, 'data')
-        self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_tabular.dat')
-        self.raw_aursad_D_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
+        self.feature_aursad_path = os.path.join(self.data_folder_path, 'aursad_tabular.dat')
+        self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
         # default raw aursad D
-        self.data_source = "raw_aursad_D"
+        self.raw_data_source = True
 
         # parmeters == common
         self.num_class = 4
