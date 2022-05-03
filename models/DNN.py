@@ -35,7 +35,6 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_D_path, expand_flag=False)
 
     # construct DNN
-    print(X_train.shape[1])
     model = DNN_scr(X_train.shape[1], cfg)
     #
     # compile model
