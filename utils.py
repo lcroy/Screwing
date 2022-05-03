@@ -12,6 +12,9 @@ def load_feature_data(dataset, expand_flag):
     # split data
     X_train, X_test, y_train, y_test = raw_data['X_train'], raw_data['X_test'],raw_data['y_train'], raw_data['y_test']
 
+    print(y_train.value_counts())
+    print(y_test.value_counts())
+
     # expand to 3-dim
     if expand_flag == True:
         X_train, X_test = np.expand_dims(X_train,-1), np.expand_dims(X_test,-1)
@@ -31,6 +34,9 @@ def load_raw_data(dataset, expand_flag):
     X, y = raw_data['X_t'], raw_data['y']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 101)
+
+    print(y_train.value_counts())
+    print(y_test.value_counts())
 
     # expand to 3-dim
     if expand_flag == True:
