@@ -30,7 +30,7 @@ def load_raw_data(dataset, expand_flag):
     # split data
     X, y = raw_data['X_t'], raw_data['y']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 101)
 
     # expand to 3-dim
     if expand_flag == True:
