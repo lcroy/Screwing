@@ -1,8 +1,5 @@
 import tensorflow as tf
 import keras
-import numpy as np
-import pickle
-import matplotlib.pyplot as plt
 import json
 
 from keras import layers
@@ -11,47 +8,7 @@ from sklearn.metrics import f1_score, precision_score, recall_score, confusion_m
 import sys
 sys.path.append("..")
 from configure import Config
-
-
-# load dataset
-def load_data(dataset):
-    # read the raw data file
-    with open(dataset, "rb") as raw_file:
-        raw_data = pickle.load(raw_file)
-
-    # split data
-    X_train, X_test, Y_train, Y_test = raw_data['X_train'], raw_data['X_test'],raw_data['y_train'], raw_data['y_test']
-
-    # expand to 3-dim
-    X_train, X_test = np.expand_dims(X_train,-1), np.expand_dims(X_test,-1)
-
-    # change label to one-hot
-    # Y_train, Y_test = pd.get_dummies(Y_train), pd.get_dummies(Y_test)
-
-    return X_train, X_test, Y_train, Y_test
-
-
-# plot the accuracy and loss
-def plot_loss_acc(history, cfg):
-    # plot accuracy figure
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.TRM_acc_fig_path)
-    plt.show()
-
-    # plot loss figure
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'val'], loc='upper left')
-    plt.savefig(cfg.TRM_loss_fig_path)
-    plt.show()
+from utils import *
 
 
 def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
@@ -101,10 +58,12 @@ if __name__ == '__main__':
     cfg = Config()
 
     # split data
-    x_train, x_test, y_train, y_test = load_data(cfg.raw_aursad_path)
+    # X_train, X_test, y_train, y_test = load_feature_data(cfg.raw_aursad_path, expand_flag=True)
+    # process the raw data
+    X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_D_path, expand_flag=True)
 
     # data sample shape
-    input_shape = x_train.shape[1:]
+    input_shape = X_train.shape[1:]
 
     # initial a Transformer model
     model = TRM_scr(
@@ -130,7 +89,7 @@ if __name__ == '__main__':
     callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
 
     # training model 
-    history = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=cfg.epochs, batch_size=cfg.batch_size, callbacks=callbacks)
+    history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs, batch_size=cfg.batch_size, callbacks=callbacks)
 
     # save model
     model.save(cfg.model_TRM_path)
@@ -141,7 +100,7 @@ if __name__ == '__main__':
     # get f1, precision and recall scores
     model = keras.models.load_model(cfg.model_TRM_path)
 
-    y_pred1 = model.predict(x_test)
+    y_pred1 = model.predict(X_test)
     y_pred = np.argmax(y_pred1, axis=1)
 
     # save f1, precision, and recall scores
