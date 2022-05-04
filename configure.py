@@ -18,7 +18,7 @@ class Config:
         self.loss = 'sparse_categorical_crossentropy'  
         self.epochs = 200
         self.batch_size = 32
-        self.patience = 20
+        self.patience = 30
 
         # parameters == Transformer
         self.head_size=256
