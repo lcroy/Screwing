@@ -2,6 +2,7 @@ import tensorflow as tf
 import keras
 import json
 import os
+import argparse
 
 from keras import layers
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
@@ -29,23 +30,20 @@ def DNN_scr(input_shape, cfg):
 if __name__ == "__main__":
     cfg = Config()
 
-    # setup parameter based on the data source
-    if cfg.raw_data_source == True:
+    parser = argparse.ArgumentParser()
+    ## Required parameters
+    parser.add_argument("--is_raw_data", default=True, type=bool, required=True,
+                        help="Select raw data or feature selected data")
+    args = parser.parse_args()
+
+    # split data source
+    if args.is_raw_data == True:
         X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=False)
-        model_path = os.path.join(cfg.model_DNN_path, 'raw_model.h5')
-        loss_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'raw_loss.png')
-        acc_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'raw_acc.png')
-        precision = "raw_DNN_precision"
-        recall = "raw_DNN_recall"
-        f1 = "raw_DNN_f1"
     else:
         X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=False)
-        model_path = os.path.join(cfg.model_DNN_path, 'feature_model.h5')
-        loss_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'feature_loss.png')
-        acc_img = os.path.join(cfg.DNN_loss_acc_fig_path, 'feature_acc.png')
-        precision = "feature_DNN_precision"
-        recall = "feature_DNN_recall"
-        f1 = "feature_DNN_f1"
+
+    # set up parameters
+    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set("DNN", args.is_raw_data)
 
     # construct DNN
     model = DNN_scr(X_train.shape[1], cfg)

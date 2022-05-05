@@ -2,6 +2,7 @@ import tensorflow as tf
 import keras
 import json
 import os
+import argparse
 
 from keras import layers
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
@@ -57,23 +58,20 @@ if __name__ == '__main__':
     # get configure file
     cfg = Config()
 
-    # setup parameter based on the data source
-    if cfg.raw_data_source == True:
-        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=True)
-        model_path = os.path.join(cfg.model_TRM_path, 'raw_model.h5')
-        loss_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'raw_loss.png')
-        acc_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'raw_acc.png')
-        precision = "raw_TRM_precision"
-        recall = "raw_TRM_recall"
-        f1 = "raw_TRM_f1"
+    parser = argparse.ArgumentParser()
+    ## Required parameters
+    parser.add_argument("--is_raw_data", default=True, type=bool, required=True,
+                        help="Select raw data or feature selected data")
+    args = parser.parse_args()
+
+    # split data source
+    if args.is_raw_data == True:
+        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=False)
     else:
-        X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=True)
-        model_path = os.path.join(cfg.model_TRM_path, 'feature_model.h5')
-        loss_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'feature_loss.png')
-        acc_img = os.path.join(cfg.TRM_loss_acc_fig_path, 'feature_acc.png')
-        precision = "feature_TRM_precision"
-        recall = "feature_TRM_recall"
-        f1 = "feature_TRM_f1"
+        X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=False)
+
+    # set up parameters
+    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set("TRM", args.is_raw_data)
 
     # data sample shape
     input_shape = X_train.shape[1:]

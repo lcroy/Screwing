@@ -52,3 +52,56 @@ class Config:
         self.scores_file_path = os.path.join(self.scores_path, 'scores.json')
 
 
+    def model_parameters_set(self, model_name, raw_data_source):
+
+        if model_name == "DNN":
+            if raw_data_source == True:
+                model_path = os.path.join(self.model_DNN_path, 'raw_model.h5')
+                loss_img = os.path.join(self.DNN_loss_acc_fig_path, 'raw_loss.png')
+                acc_img = os.path.join(self.DNN_loss_acc_fig_path, 'raw_acc.png')
+                precision = "raw_DNN_precision"
+                recall = "raw_DNN_recall"
+                f1 = "raw_DNN_f1"
+            else:
+                model_path = os.path.join(self.model_DNN_path, 'feature_model.h5')
+                loss_img = os.path.join(self.DNN_loss_acc_fig_path, 'feature_loss.png')
+                acc_img = os.path.join(self.DNN_loss_acc_fig_path, 'feature_acc.png')
+                precision = "feature_DNN_precision"
+                recall = "feature_DNN_recall"
+                f1 = "feature_DNN_f1"
+
+        elif model_name == "Conv1D":
+            if raw_data_source == True:
+                model_path = os.path.join(self.model_Conv1D_path, 'raw_model.h5')
+                loss_img = os.path.join(self.Conv1D_loss_acc_fig_path, 'raw_loss.png')
+                acc_img = os.path.join(self.Conv1D_loss_acc_fig_path, 'raw_acc.png')
+                precision = "raw_Conv1D_precision"
+                recall = "raw_Conv1D_recall"
+                f1 = "raw_Conv1D_f1"
+            else:
+                model_path = os.path.join(self.model_Conv1D_path, 'feature_model.h5')
+                loss_img = os.path.join(self.Conv1D_loss_acc_fig_path, 'feature_loss.png')
+                acc_img = os.path.join(self.Conv1D_loss_acc_fig_path, 'feature_acc.png')
+                precision = "feature_Conv1D_precision"
+                recall = "feature_Conv1D_recall"
+                f1 = "feature_Conv1D_f1"
+
+        elif model_name == "TRM":
+            if raw_data_source == True:
+                model_path = os.path.join(self.model_TRM_path, 'raw_model.h5')
+                loss_img = os.path.join(self.TRM_loss_acc_fig_path, 'raw_loss.png')
+                acc_img = os.path.join(self.TRM_loss_acc_fig_path, 'raw_acc.png')
+                precision = "raw_TRM_precision"
+                recall = "raw_TRM_recall"
+                f1 = "raw_TRM_f1"
+            else:
+                model_path = os.path.join(self.model_TRM_path, 'feature_model.h5')
+                loss_img = os.path.join(self.TRM_loss_acc_fig_path, 'feature_loss.png')
+                acc_img = os.path.join(self.TRM_loss_acc_fig_path, 'feature_acc.png')
+                precision = "feature_TRM_precision"
+                recall = "feature_TRM_recall"
+                f1 = "feature_TRM_f1"
+
+        return model_path, loss_img, acc_img, precision, recall, f1
+
+
