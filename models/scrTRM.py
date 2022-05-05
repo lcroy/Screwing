@@ -66,9 +66,9 @@ if __name__ == '__main__':
 
     # split data source
     if args.is_raw_data == True:
-        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=False)
+        X_train, X_test, y_train, y_test = load_raw_data(cfg.raw_aursad_path, expand_flag=True)
     else:
-        X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=False)
+        X_train, X_test, y_train, y_test = load_feature_data(cfg.feature_aursad_path, expand_flag=True)
 
     # set up parameters
     model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set("TRM", args.is_raw_data)
