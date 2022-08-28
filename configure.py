@@ -9,8 +9,11 @@ class Config:
         self.data_folder_path = os.path.join(self.project_path, 'data')
         self.feature_aursad_path = os.path.join(self.data_folder_path, 'aursad_tabular.dat')
         self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
-        # default raw aursad D
+        self.org_aursad_path = os.path.join(self.data_folder_path, 'aursad_cln.dat')
+        # raw aursad D
         self.raw_data_source = True
+        # original aursad (process + task)
+        self.org_data_only_process = True
 
         # parmeters == common
         self.num_class = 4
@@ -40,12 +43,14 @@ class Config:
         self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D')
         self.model_TRM_path = os.path.join(self.model_path, 'TRM')
         self.model_DNN_path = os.path.join(self.model_path, 'DNN')
+        self.model_TRM_org_data_path = os.path.join(self.model_path, 'TRM_org_data')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
         self.Conv1D_loss_acc_fig_path = os.path.join(self.fig_path, 'Conv1D')
         self.TRM_loss_acc_fig_path = os.path.join(self.fig_path, 'TRM')
         self.DNN_loss_acc_fig_path = os.path.join(self.fig_path, 'DNN')
+        self.TRM_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'TRM_org_data')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')
@@ -105,3 +110,22 @@ class Config:
         return model_path, loss_img, acc_img, precision, recall, f1
 
 
+    def model_parameters_set_process_task(self, model_name, org_data_only_process):
+
+        if model_name == "TRM_org_data":
+            if org_data_only_process == True:
+                model_path = os.path.join(self.model_TRM_org_data_path, 'process_model.h5')
+                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_loss.png')
+                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_acc.png')
+                precision = "process_TRM_precision"
+                recall = "process_TRM_recall"
+                f1 = "process_TRM_f1"
+            else:
+                model_path = os.path.join(self.model_TRM_org_data_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_task_acc.png')
+                precision = "process_task_TRM_precision"
+                recall = "process_task_TRM_recall"
+                f1 = "process_task_TRM_f1"
+
+        return model_path, loss_img, acc_img, precision, recall, f1
