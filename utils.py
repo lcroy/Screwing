@@ -11,7 +11,7 @@ def load_feature_data(dataset, expand_flag):
         raw_data = pickle.load(raw_file)
 
     # split data
-    X_train, X_test, y_train, y_test = raw_data['X_train'], raw_data['X_test'],raw_data['y_train'], raw_data['y_test']
+    X_train, X_test, y_train, y_test = raw_data['X_train'], raw_data['X_test'], raw_data['y_train'], raw_data['y_test']
 
     print(y_train.value_counts())
     print(y_test.value_counts())
@@ -71,10 +71,6 @@ def load_org_data_only_process(dataset, expand_flag):
         values = item[0]
         y.append(values)
     y = pd.DataFrame(y)
-    #
-    # print(type(X), type(y))
-    # print(X)
-    # print(y)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 101)
 
@@ -85,14 +81,12 @@ def load_org_data_only_process(dataset, expand_flag):
     if expand_flag == True:
         X_train, X_test = np.expand_dims(X_train,-1), np.expand_dims(X_test,-1)
 
+    print(X_train.shape)
+
     # change label to one-hot
     # Y_train, Y_test = pd.get_dummies(Y_train), pd.get_dummies(Y_test)
 
     return X_train, X_test, y_train, y_test
-
-
-
-
 
 
 # plot the accuracy and loss
