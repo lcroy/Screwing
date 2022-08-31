@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from keras import utils
 
 # load dataset
 def load_feature_data(dataset, expand_flag):
@@ -82,9 +83,6 @@ def load_org_data_only_process(dataset, expand_flag):
         X_train, X_test = np.expand_dims(X_train,-1), np.expand_dims(X_test,-1)
 
     print(X_train.shape)
-
-    # change label to one-hot
-    # Y_train, Y_test = pd.get_dummies(Y_train), pd.get_dummies(Y_test)
 
     return X_train, X_test, y_train, y_test
 

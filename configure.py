@@ -38,6 +38,12 @@ class Config:
         self.units_h3 = 938
         self.units_h4 = 4
 
+        # parameters == ConvLSTM2D
+        self.steps = 15
+        self.length = 113
+        self.verbose = 1
+        self.filters = 64
+
         # model checkpoint path
         self.model_path = os.path.join(self.project_path, 'checkpoints')
         self.model_Conv1D_path = os.path.join(self.model_path, 'Conv1D')
@@ -46,6 +52,7 @@ class Config:
 
         self.model_TRM_org_data_path = os.path.join(self.model_path, 'TRM_org_data')
         self.model_Conv1D_org_data_path = os.path.join(self.model_path, 'Conv1D_org_data')
+        self.model_ConvLSTM2D_org_data_path = os.path.join(self.model_path, 'ConvLSTM2D_org_data')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
@@ -55,6 +62,7 @@ class Config:
 
         self.TRM_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'TRM_org_data')
         self.Conv1D_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'Conv1D_org_data')
+        self.ConvLSTM2D_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'ConvLSTM2D_org_data')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')
@@ -146,5 +154,20 @@ class Config:
                 precision = "process_task_Conv1D_precision"
                 recall = "process_task_Conv1D_recall"
                 f1 = "process_task_Conv1D_f1"
+        elif model_name == "ConvLSTM2D_org_data":
+            if org_data_only_process == True:
+                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, 'process_model.h5')
+                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_loss.png')
+                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_acc.png')
+                precision = "process_ConvLSTM2D_precision"
+                recall = "process_ConvLSTM2D_recall"
+                f1 = "process_ConvLSTM2D_f1"
+            else:
+                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_task_acc.png')
+                precision = "process_task_ConvLSTM2D_precision"
+                recall = "process_task_ConvLSTM2D_recall"
+                f1 = "process_task_ConvLSTM2D_f1"
 
         return model_path, loss_img, acc_img, precision, recall, f1
