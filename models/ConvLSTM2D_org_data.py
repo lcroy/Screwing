@@ -14,14 +14,14 @@ from utils import *
 
 
 # build model
-def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg):
-    features, outputs = X_train.shape[2], cfg.num_class
+def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs):
+    features, outputs = features, outputs
     input_shape = (cfg.steps, 1, cfg.length, features)
-    # reshape training data
-    x_train = X_train.reshape((X_train.shape[0], cfg.steps, 1, cfg.length, features))
-    x_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, features))
+    # # reshape training data
+    # x_train = X_train.reshape((X_train.shape[0], cfg.steps, 1, cfg.length, features))
+    # x_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, features))
     # one-hot encoder
-    y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4),
+    # y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4),
 
     # create model
     model = models.Sequential()
@@ -38,7 +38,7 @@ def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg):
     # opt = optimizers.Adam(learning_rate=lr_schedule)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
     # Training and evaluation
-    history = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=cfg.epochs,
+    history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs,
                         batch_size=cfg.batch_size,
                         verbose=cfg.verbose)
 
@@ -66,8 +66,17 @@ if __name__ == "__main__":
 
     callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
 
+    #features, class
+    features, outputs = X_train.shape[2], cfg.num_class
+    # reshape training data
+    X_train = X_train.reshape((X_train.shape[0], cfg.steps, 1, cfg.length, X_train.shape[2]))
+    X_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, X_train.shape[2]))
+     # one-hot encoder
+    y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4)
+    
+
     # construct Conv1D
-    model, history = ConvLSTM2D(X_train, y_train, X_test, y_test, cfg)
+    model, history = ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs)
 
     # save model
     model.save(model_path)
