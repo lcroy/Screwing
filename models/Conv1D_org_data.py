@@ -6,6 +6,7 @@ import argparse
 
 from keras import layers, utils, models
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+from keras.callbacks import ModelCheckpoint
 
 import sys
 sys.path.append("..")
@@ -97,18 +98,26 @@ if __name__ == "__main__":
 
     print(X_train.shape[1:])
 
-    callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+    # callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+    checkpoint = ModelCheckpoint(model_path, monitor='val_acc', verbose=1, save_best_only=True,
+                                 mode='max')
+    callbacks_list = [checkpoint]
+
 
     # # construct Conv1D
-    # model = conv1D_scr(X_train.shape[1:], cfg)
+    model = conv1D_scr(X_train.shape[1:], cfg)
     # # training model
+    history = model.fit(X_train, y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
+                        validation_data=(X_test, y_test), callbacks=callbacks_list, verbose=1)
     # history = model.fit(X_train, y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
     #                     validation_data=(X_test, y_test), callbacks=callbacks)
 
     # construct multi-head Conv1D
-    model = Multi_head_conv1D_scr(X_train.shape[1:], cfg)
-    history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
-              validation_data=([X_test, X_test, X_test], y_test), callbacks=callbacks)
+    # model = Multi_head_conv1D_scr(X_train.shape[1:], cfg)
+    # history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
+    #                     validation_data=([X_test, X_test, X_test], y_test), callbacks=callbacks_list, verbose=1)
+    # history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
+    #           validation_data=([X_test, X_test, X_test], y_test), callbacks=callbacks)
 
     # training model
     #
@@ -127,9 +136,9 @@ if __name__ == "__main__":
     model = keras.models.load_model(model_path)
 
     # # Conv1D
-    # y_pred1 = model.predict(X_test)
+    y_pred1 = model.predict(X_test)
     # Multi-head Conv1D
-    y_pred1 = model.predict([X_test, X_test, X_test])
+    # y_pred1 = model.predict([X_test, X_test, X_test])
 
     y_pred = np.argmax(y_pred1, axis=1)
 

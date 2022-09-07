@@ -19,7 +19,7 @@ class Config:
         self.num_class = 4
         self.lr = 0.0001
         self.loss = 'sparse_categorical_crossentropy'  
-        self.epochs = 20
+        self.epochs = 200
         self.batch_size = 32
         self.patience = 30
 
