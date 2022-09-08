@@ -14,7 +14,7 @@ from utils import *
 
 
 # build model
-def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs):
+def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list):
     features, outputs = features, outputs
     input_shape = (cfg.steps, 1, cfg.length, features)
     # # reshape training data
@@ -39,7 +39,7 @@ def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs):
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
     # Training and evaluation
     history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs,
-                        batch_size=cfg.batch_size,
+                        batch_size=cfg.batch_size, callbacks=callbacks_list,
                         verbose=cfg.verbose)
 
     print(model.summary())
@@ -64,7 +64,12 @@ if __name__ == "__main__":
     # set up parameters
     model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("ConvLSTM2D_org_data", args.is_org_data_only_process)
 
-    callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+    # callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+    from keras.callbacks import ModelCheckpoint
+
+    checkpoint = ModelCheckpoint(model_path, monitor='val_acc', verbose=1, save_best_only=True,
+                                 mode='max')
+    callbacks_list = [checkpoint]
 
     #features, class
     features, outputs = X_train.shape[2], cfg.num_class
@@ -76,7 +81,7 @@ if __name__ == "__main__":
     
 
     # construct Conv1D
-    model, history = ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs)
+    model, history = ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list)
 
     # save model
     model.save(model_path)
