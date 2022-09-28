@@ -6,6 +6,7 @@ import argparse
 
 from keras import layers, utils, models
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+from keras.callbacks import ModelCheckpoint
 
 import sys
 sys.path.append("..")
@@ -65,7 +66,6 @@ if __name__ == "__main__":
     model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("ConvLSTM2D_org_data", args.is_org_data_only_process)
 
     # callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
-    from keras.callbacks import ModelCheckpoint
 
     checkpoint = ModelCheckpoint(model_path, monitor='val_acc', verbose=1, save_best_only=True,
                                  mode='max')
@@ -78,9 +78,8 @@ if __name__ == "__main__":
     X_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, X_train.shape[2]))
      # one-hot encoder
     y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4)
-    
 
-    # construct Conv1D
+    # construct Conv2D
     model, history = ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list)
 
     # save model
@@ -93,6 +92,7 @@ if __name__ == "__main__":
     model = keras.models.load_model(model_path)
 
     y_pred1 = model.predict(X_test)
+    y_test = np.argmax(y_test, axis=1)
     y_pred = np.argmax(y_pred1, axis=1)
 
     # save f1, precision, and recall scores
