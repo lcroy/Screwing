@@ -6,7 +6,7 @@ import argparse
 
 from keras import layers, utils, models
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, CSVLogger
 
 import sys
 sys.path.append("..")
@@ -38,9 +38,12 @@ def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs, callbac
     #     decay_rate=0.9)
     # opt = optimizers.Adam(learning_rate=lr_schedule)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+    
+    csv_logger = CSVLogger('log.csv', append=True, separator=';')
+
     # Training and evaluation
     history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs,
-                        batch_size=cfg.batch_size, callbacks=callbacks_list,
+                        batch_size=cfg.batch_size, callbacks=[callbacks_list, csv_logger],
                         verbose=cfg.verbose)
 
     print(model.summary())
@@ -53,17 +56,22 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     ## Required parameters
-    parser.add_argument("--is_org_data_only_process", default=True, type=bool, required=True,
+    parser.add_argument("--is_org_data_only_process", default='Yes', type=str, required=True,
                         help="Select original data including process data (and) task data")
+    parser.add_argument("--is_flt", default='Yes', type=str, required=True,
+                        help="Select the filtered data")
     args = parser.parse_args()
 
     # split data source
-    if args.is_org_data_only_process == True:
-        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_path, expand_flag=True)
+    if (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'No'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_cln_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'Yes'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_flt_path, expand_flag=True)
     # else:
     #     X_train, X_test, y_train, y_test = load_org_data_process_and_task(cfg.org_aursad_path, expand_flag=True)
     # set up parameters
-    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("ConvLSTM2D_org_data", args.is_org_data_only_process)
+
+    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("ConvLSTM2D_org_data", args.is_org_data_only_process, args.is_flt)
 
     # callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
 

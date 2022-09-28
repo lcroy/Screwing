@@ -9,7 +9,8 @@ class Config:
         self.data_folder_path = os.path.join(self.project_path, 'data')
         self.feature_aursad_path = os.path.join(self.data_folder_path, 'aursad_tabular.dat')
         self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
-        self.org_aursad_path = os.path.join(self.data_folder_path, 'aursad_cln.dat')
+        self.org_aursad_cln_path = os.path.join(self.data_folder_path, 'aursad_cln.dat')
+        self.org_aursad_flt_path = os.path.join(self.data_folder_path, 'aursad_flt.dat')
         # raw aursad D
         self.raw_data_source = True
         # original aursad (process + task)
@@ -19,7 +20,7 @@ class Config:
         self.num_class = 4
         self.lr = 0.0001
         self.loss = 'sparse_categorical_crossentropy'  
-        self.epochs = 20
+        self.epochs = 200
         self.batch_size = 32
         self.patience = 30
 
@@ -122,52 +123,59 @@ class Config:
         return model_path, loss_img, acc_img, precision, recall, f1
 
 
-    def model_parameters_set_process_task(self, model_name, org_data_only_process):
+    def model_parameters_set_process_task(self, model_name, org_data_only_process, is_flt):
+
+        # check if it is the filtered data                    
+        if is_flt == 'Yes':
+            flt_path = "flt"
+        else:
+            flt_path = "unflt"
 
         if model_name == "TRM_org_data":
-            if org_data_only_process == True:
-                model_path = os.path.join(self.model_TRM_org_data_path, 'process_model.h5')
-                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_loss.png')
-                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_acc.png')
-                precision = "process_TRM_precision"
-                recall = "process_TRM_recall"
-                f1 = "process_TRM_f1"
+            if org_data_only_process == 'Yes':
+                model_path = os.path.join(self.model_TRM_org_data_path, flt_path, 'process_model.h5')
+                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, flt_path, 'process_loss.png')
+                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, flt_path, 'process_acc.png')
+                precision = flt_path + "process_TRM_precision"
+                recall = flt_path + "process_TRM_recall"
+                f1 = flt_path + "process_TRM_f1"
             else:
-                model_path = os.path.join(self.model_TRM_org_data_path, 'process_task_model.h5')
-                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_task_loss.png')
-                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, 'process_task_acc.png')
-                precision = "process_task_TRM_precision"
-                recall = "process_task_TRM_recall"
-                f1 = "process_task_TRM_f1"
+                model_path = os.path.join(self.model_TRM_org_data_path, flt_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, flt_path, 'process_task_acc.png')
+                precision = flt_path + "process_task_TRM_precision"
+                recall = flt_path + "process_task_TRM_recall"
+                f1 = flt_path + "process_task_TRM_f1"
         elif model_name == "Conv1D_org_data":
-            if org_data_only_process == True:
-                model_path = os.path.join(self.model_Conv1D_org_data_path, 'process_model.h5')
-                loss_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, 'process_loss.png')
-                acc_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, 'process_acc.png')
-                precision = "process_Conv1D_precision"
-                recall = "process_Conv1D_recall"
-                f1 = "process_Conv1D_f1"
+            if org_data_only_process == 'Yes':
+                model_path = os.path.join(self.model_Conv1D_org_data_path, flt_path, 'process_model.h5')
+                loss_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, flt_path, 'process_loss.png')
+                acc_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, flt_path, 'process_acc.png')
+                precision = flt_path + "process_Conv1D_precision"
+                recall = flt_path + "process_Conv1D_recall"
+                f1 = flt_path + "process_Conv1D_f1"
             else:
-                model_path = os.path.join(self.model_Conv1D_org_data_path, 'process_task_model.h5')
-                loss_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, 'process_task_loss.png')
-                acc_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, 'process_task_acc.png')
-                precision = "process_task_Conv1D_precision"
-                recall = "process_task_Conv1D_recall"
-                f1 = "process_task_Conv1D_f1"
+                model_path = os.path.join(self.model_Conv1D_org_data_path, flt_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, flt_path, 'process_task_acc.png')
+                precision = flt_path + "process_task_Conv1D_precision"
+                recall = flt_path + "process_task_Conv1D_recall"
+                f1 = flt_path + "process_task_Conv1D_f1"
         elif model_name == "ConvLSTM2D_org_data":
-            if org_data_only_process == True:
-                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, 'process_model.h5')
-                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_loss.png')
-                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_acc.png')
-                precision = "process_ConvLSTM2D_precision"
-                recall = "process_ConvLSTM2D_recall"
-                f1 = "process_ConvLSTM2D_f1"
+            if org_data_only_process == 'Yes':
+                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, flt_path, 'process_model.h5')
+                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, flt_path, 'process_loss.png')
+                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, flt_path, 'process_acc.png')
+                precision = flt_path + "process_ConvLSTM2D_precision"
+                recall = flt_path + "process_ConvLSTM2D_recall"
+                f1 = flt_path + "process_ConvLSTM2D_f1"
             else:
-                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, 'process_task_model.h5')
-                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_task_loss.png')
-                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, 'process_task_acc.png')
-                precision = "process_task_ConvLSTM2D_precision"
-                recall = "process_task_ConvLSTM2D_recall"
-                f1 = "process_task_ConvLSTM2D_f1"
+                model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, flt_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, flt_path, 'process_task_acc.png')
+                precision = flt_path + "process_task_ConvLSTM2D_precision"
+                recall = flt_path + "process_task_ConvLSTM2D_recall"
+                f1 = flt_path + "process_task_ConvLSTM2D_f1"
+
 
         return model_path, loss_img, acc_img, precision, recall, f1

@@ -89,25 +89,25 @@ def load_org_data_only_process(dataset, expand_flag):
 
 # plot the accuracy and loss
 def plot_loss_acc(history, loss_img, acc_img):
-    pd.DataFrame(history.history).plot(figsize=(8,5))
-    plt.savefig(loss_img)
-    plt.show()
-    # # plot accuracy figure
-    # plt.plot(history.history['acc'])
-    # plt.plot(history.history['val_acc'])
-    # plt.title('model accuracy')
-    # plt.ylabel('accuracy')
-    # plt.xlabel('epoch')
-    # plt.legend(['train', 'val'], loc='upper left')
-    # plt.savefig(acc_img)
-    # plt.show()
-
-    # # plot loss figure
-    # plt.plot(history.history['loss'])
-    # plt.plot(history.history['val_loss'])
-    # plt.title('model loss')
-    # plt.ylabel('loss')
-    # plt.xlabel('epoch')
-    # plt.legend(['train', 'val'], loc='upper left')
+    # pd.DataFrame(history.history).plot(figsize=(8,5))
     # plt.savefig(loss_img)
     # plt.show()
+    # plot accuracy figure
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'val'], loc='upper left')
+    plt.savefig(acc_img)
+    plt.close()
+
+    # plot loss figure
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'val'], loc='upper left')
+    plt.savefig(loss_img)
+    plt.close()
