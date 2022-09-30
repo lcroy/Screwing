@@ -89,10 +89,6 @@ def load_org_data_only_process(dataset, expand_flag):
 
 # plot the accuracy and loss
 def plot_loss_acc(history, loss_img, acc_img):
-    # pd.DataFrame(history.history).plot(figsize=(8,5))
-    # plt.savefig(loss_img)
-    # plt.show()
-    # plot accuracy figure
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.title('model accuracy')
