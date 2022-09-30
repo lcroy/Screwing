@@ -6,6 +6,7 @@ import argparse
 
 from keras import layers
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+from keras.callbacks import ModelCheckpoint, CSVLogger
 
 import sys
 sys.path.append("..")
@@ -59,19 +60,22 @@ if __name__ == '__main__':
     cfg = Config()
 
     parser = argparse.ArgumentParser()
+
     ## Required parameters
-    parser.add_argument("--is_org_data_only_process", default=True, type=bool, required=True,
+    parser.add_argument("--is_org_data_only_process", default='Yes', type=str, required=True,
                         help="Select original data including process data (and) task data")
+    parser.add_argument("--is_flt", default='Yes', type=str, required=True,
+                        help="Select the filtered data")
     args = parser.parse_args()
 
     # split data source
-    if args.is_org_data_only_process == True:
-        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_path, expand_flag=True)
-    # else:
-    #     X_train, X_test, y_train, y_test = load_org_data_process_and_task(cfg.org_aursad_path, expand_flag=True)
-
+    if (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'No'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_cln_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'Yes'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_flt_path, expand_flag=True)
+    
     # set up parameters
-    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("TRM_org_data", args.is_org_data_only_process)
+    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("TRM_org_data", args.is_org_data_only_process, args.is_flt)
 
     # data sample shape
     input_shape = X_train.shape[1:]
@@ -96,11 +100,15 @@ if __name__ == '__main__':
     # get model summary
     model.summary()
 
-    # the training will stop if the accuracy is not improved after "patinence" epochs - using early stopping for efficient
-    callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+    # # the training will stop if the accuracy is not improved after "patinence" epochs - using early stopping for efficient
+    # callbacks = [keras.callbacks.EarlyStopping(patience=cfg.patience, restore_best_weights=True)]
+
+    checkpoint = ModelCheckpoint(model_path, monitor='val_acc', verbose=1, save_best_only=True,
+                                 mode='max')
+    callbacks_list = [checkpoint]
 
     # training model
-    history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs, batch_size=cfg.batch_size, callbacks=callbacks)
+    history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs, batch_size=cfg.batch_size, callbacks=callbacks_list)
 
     # save model
     model.save(model_path)
