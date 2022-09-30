@@ -21,7 +21,7 @@ class Config:
         self.lr = 0.0001
         self.loss = 'sparse_categorical_crossentropy'  
         self.epochs = 200
-        self.batch_size = 32
+        self.batch_size = 8
         self.patience = 30
 
         # parameters == Transformer
@@ -54,6 +54,7 @@ class Config:
         self.model_TRM_org_data_path = os.path.join(self.model_path, 'TRM_org_data')
         self.model_Conv1D_org_data_path = os.path.join(self.model_path, 'Conv1D_org_data')
         self.model_ConvLSTM2D_org_data_path = os.path.join(self.model_path, 'ConvLSTM2D_org_data')
+        self.model_LSTM_org_data_path = os.path.join(self.model_path, 'LSTM_org_data')
 
         # figures of loss and acc
         self.fig_path = os.path.join(self.project_path, 'loss_acc')
@@ -64,6 +65,7 @@ class Config:
         self.TRM_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'TRM_org_data')
         self.Conv1D_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'Conv1D_org_data')
         self.ConvLSTM2D_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'ConvLSTM2D_org_data')
+        self.LSTM_org_data_loss_acc_fig_path = os.path.join(self.fig_path, 'LSTM_org_data')
 
         # json file for saving scores
         self.scores_path = os.path.join(self.project_path, 'scores')
@@ -176,6 +178,21 @@ class Config:
                 precision = flt_path + "process_task_ConvLSTM2D_precision"
                 recall = flt_path + "process_task_ConvLSTM2D_recall"
                 f1 = flt_path + "process_task_ConvLSTM2D_f1"
+        elif model_name == "LSTM_org_data":
+            if org_data_only_process == 'Yes':
+                model_path = os.path.join(self.model_LSTM_org_data_path, flt_path, 'process_model.h5')
+                loss_img = os.path.join(self.LSTM_org_data_loss_acc_fig_path, flt_path, 'process_loss.png')
+                acc_img = os.path.join(self.LSTM_org_data_loss_acc_fig_path, flt_path, 'process_acc.png')
+                precision = flt_path + "process_LSTM_precision"
+                recall = flt_path + "process_LSTM_recall"
+                f1 = flt_path + "process_LSTM_f1"
+            else:
+                model_path = os.path.join(self.model_LSTM_org_data_path, flt_path, 'process_task_model.h5')
+                loss_img = os.path.join(self.LSTM_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
+                acc_img = os.path.join(self.LSTM_org_data_loss_acc_fig_path, flt_path, 'process_task_acc.png')
+                precision = flt_path + "process_task_LSTM_precision"
+                recall = flt_path + "process_task_LSTM_recall"
+                f1 = flt_path + "process_task_LSTM_f1"
 
 
         return model_path, loss_img, acc_img, precision, recall, f1
