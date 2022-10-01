@@ -171,5 +171,7 @@ def load_org_data_process_task(dataset, expand_flag):
     # if expand_flag == True:
     #     X_train, X_test = np.expand_dims(X_train,-1), np.expand_dims(X_test,-1)
 
+    print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+
     return X_train, X_test, y_train, y_test
 

@@ -15,15 +15,15 @@ from utils import *
 
 
 # build model
-def scr_LSTM(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list):
+def LSTM_src(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list):
     features, outputs = features, outputs
     input_shape = (X_train.shape[1], features)
    
     # create model
     model = models.Sequential()
-    model.add(layers.LSTM(100, input_shape=input_shape))
+    model.add(layers.LSTM(400, input_shape=input_shape))
     model.add(layers.Dropout(cfg.dropout))
-    model.add(layers.Dense(100, activation='relu'))
+    model.add(layers.Dense(400, activation='relu'))
     model.add(layers.Dense(outputs, activation='softmax'))
     
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
@@ -50,9 +50,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # split data source
-    if (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'No'):
+    if (args.is_org_data_only_process == 'No') and (args.is_flt == 'No'):
         X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aursad_cln_path, expand_flag=True)
-    elif (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'Yes'):
+    elif (args.is_org_data_only_process == 'No') and (args.is_flt == 'Yes'):
         X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aursad_flt_path, expand_flag=True)
     # else:
     #     X_train, X_test, y_train, y_test = load_org_data_process_and_task(cfg.org_aursad_path, expand_flag=True)
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4)
 
     # construct Conv2D
-    model, history = scr_LSTM(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list)
+    model, history = LSTM_src(X_train, y_train, X_test, y_test, cfg, features, outputs, callbacks_list)
 
     # save model
     model.save(model_path)

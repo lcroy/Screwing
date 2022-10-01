@@ -38,12 +38,10 @@ def ConvLSTM2D(X_train, y_train, X_test, y_test, cfg, features, outputs, callbac
     #     decay_rate=0.9)
     # opt = optimizers.Adam(learning_rate=lr_schedule)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-    
-    csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
     # Training and evaluation
     history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=cfg.epochs,
-                        batch_size=cfg.batch_size, callbacks=[callbacks_list, csv_logger],
+                        batch_size=cfg.batch_size, callbacks=[callbacks_list],
                         verbose=cfg.verbose)
 
     print(model.summary())
@@ -67,6 +65,10 @@ if __name__ == "__main__":
         X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_cln_path, expand_flag=True)
     elif (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'Yes'):
         X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_flt_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'No') and (args.is_flt == 'No'):
+        X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aursad_cln_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'No') and (args.is_flt == 'Yes'):
+        X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aursad_flt_path, expand_flag=True)
     # else:
     #     X_train, X_test, y_train, y_test = load_org_data_process_and_task(cfg.org_aursad_path, expand_flag=True)
     # set up parameters
@@ -82,8 +84,8 @@ if __name__ == "__main__":
     #features, class
     features, outputs = X_train.shape[2], cfg.num_class
     # reshape training data
-    X_train = X_train.reshape((X_train.shape[0], cfg.steps, 1, cfg.length, X_train.shape[2]))
-    X_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, X_train.shape[2]))
+    X_train = X_train.reshape((X_train.shape[0], cfg.steps, 1, cfg.length, features))
+    X_test = X_test.reshape((X_test.shape[0], cfg.steps, 1, cfg.length, features))
      # one-hot encoder
     y_train, y_test = utils.np_utils.to_categorical(y_train, num_classes=4), utils.np_utils.to_categorical(y_test, num_classes=4)
 
