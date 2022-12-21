@@ -5,13 +5,13 @@ import os
 import argparse
 
 from keras import layers, utils, models
-from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+from sklearn.metrics import f1_score, precision_score, recall_score, balanced_accuracy_score,roc_auc_score
 from keras.callbacks import ModelCheckpoint
 
 import sys
 sys.path.append("..")
-from configure import Config
-from utils import *
+from screwing.configure import Config
+from screwing.utils import *
 
 
 # build model
@@ -84,17 +84,24 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     ## Required parameters
-    parser.add_argument("--is_org_data_only_process", default=True, type=bool, required=True,
+    parser.add_argument("--is_org_data_only_process", default='Yes', type=str, required=True,
                         help="Select original data including process data (and) task data")
+    parser.add_argument("--is_flt", default='Yes', type=str, required=True,
+                        help="Select the filtered data")
     args = parser.parse_args()
 
     # split data source
-    if args.is_org_data_only_process == True:
-        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_path, expand_flag=True)
-    # else:
-    #     X_train, X_test, y_train, y_test = load_org_data_process_and_task(cfg.org_aursad_path, expand_flag=True)
-    # set up parameters
-    model_path, loss_img, acc_img, precision, recall, f1 = cfg.model_parameters_set_process_task("Conv1D_org_data", args.is_org_data_only_process)
+    if (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'No'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_cln_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'Yes') and (args.is_flt == 'Yes'):
+        X_train, X_test, y_train, y_test = load_org_data_only_process(cfg.org_aursad_flt_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'No') and (args.is_flt == 'No'):
+        X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aauwsd_path, expand_flag=True)
+    elif (args.is_org_data_only_process == 'No') and (args.is_flt == 'Yes'):
+        X_train, X_test, y_train, y_test = load_org_data_process_task(cfg.org_aursad_flt_path, expand_flag=True)
+    
+    # set the path for model, image
+    model_path, loss_img, acc_img, precision, recall, f1, balanced_accuracy, roc = cfg.model_parameters_set_process_task("Conv1D_org_data", args.is_org_data_only_process, args.is_flt)
 
     print(X_train.shape[1:])
 
@@ -104,9 +111,9 @@ if __name__ == "__main__":
     callbacks_list = [checkpoint]
 
 
-    # # construct Conv1D
+    # construct Conv1D
     model = conv1D_scr(X_train.shape[1:], cfg)
-    # # training model
+    # training model
     history = model.fit(X_train, y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
                         validation_data=(X_test, y_test), callbacks=callbacks_list, verbose=1)
     # history = model.fit(X_train, y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
@@ -116,7 +123,7 @@ if __name__ == "__main__":
     # model = Multi_head_conv1D_scr(X_train.shape[1:], cfg)
     # history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
     #                     validation_data=([X_test, X_test, X_test], y_test), callbacks=callbacks_list, verbose=1)
-    # history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
+    # # history = model.fit([X_train, X_train, X_train], y_train, epochs=cfg.epochs, batch_size=cfg.batch_size,
     #           validation_data=([X_test, X_test, X_test], y_test), callbacks=callbacks)
 
     # training model
@@ -136,16 +143,19 @@ if __name__ == "__main__":
     model = keras.models.load_model(model_path)
 
     # # Conv1D
-    y_pred1 = model.predict(X_test)
+    y_pred_proba = model.predict(X_test)
     # Multi-head Conv1D
-    # y_pred1 = model.predict([X_test, X_test, X_test])
+    # y_pred_proba = model.predict([X_test, X_test, X_test])
 
-    y_pred = np.argmax(y_pred1, axis=1)
+    y_pred = np.argmax(y_pred_proba, axis=1)
 
     # save f1, precision, and recall scores
     scores = {precision: precision_score(y_test, y_pred, average="macro"),
               recall: recall_score(y_test, y_pred, average="macro"),
-              f1: f1_score(y_test, y_pred, average="macro")}
+              f1: f1_score(y_test, y_pred, average="macro"),
+              balanced_accuracy: balanced_accuracy_score(y_test, y_pred),
+              roc: roc_auc_score(y_test, y_pred_proba, average="weighted",
+                        multi_class="ovr")}
     with open(cfg.scores_file_path, 'a') as outfile:
         json.dump(scores, outfile)
     outfile.close()
