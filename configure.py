@@ -11,13 +11,16 @@ class Config:
         self.raw_aursad_path = os.path.join(self.data_folder_path, 'aursad_D_t.dat')
         self.org_aursad_cln_path = os.path.join(self.data_folder_path, 'aursad_cln.dat')
         self.org_aursad_flt_path = os.path.join(self.data_folder_path, 'aursad_flt.dat')
+        self.org_aauwsd_path = os.path.join(self.data_folder_path, 'AAUWSD.dat')
+
         # raw aursad D
         self.raw_data_source = True
         # original aursad (process + task)
         self.org_data_only_process = True
 
         # parmeters == common
-        self.num_class = 4
+        # self.num_class = 4
+        self.num_class = 5
         self.lr = 0.0001
         self.loss = 'sparse_categorical_crossentropy'  
         self.epochs = 200
@@ -40,8 +43,8 @@ class Config:
         self.units_h4 = 4
 
         # parameters == ConvLSTM2D
-        self.steps = 15
-        self.length = 113
+        self.steps = 20
+        self.length = 251
         self.verbose = 1
         self.filters = 64
 
@@ -127,7 +130,7 @@ class Config:
 
     def model_parameters_set_process_task(self, model_name, org_data_only_process, is_flt):
 
-        # check if it is the filtered data                    
+         # check if it is the filtered data                    
         if is_flt == 'Yes':
             flt_path = "flt"
         else:
@@ -141,6 +144,8 @@ class Config:
                 precision = flt_path + "process_TRM_precision"
                 recall = flt_path + "process_TRM_recall"
                 f1 = flt_path + "process_TRM_f1"
+                balanced_accuracy = flt_path + "process_TRM_balanced_accuracy"
+                roc = flt_path + "process_TRM_roc"
             else:
                 model_path = os.path.join(self.model_TRM_org_data_path, flt_path, 'process_task_model.h5')
                 loss_img = os.path.join(self.TRM_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
@@ -148,6 +153,8 @@ class Config:
                 precision = flt_path + "process_task_TRM_precision"
                 recall = flt_path + "process_task_TRM_recall"
                 f1 = flt_path + "process_task_TRM_f1"
+                balanced_accuracy = flt_path + "process_task_TRM_balanced_accuracy"
+                roc = flt_path + "process_task_TRM_roc"
         elif model_name == "Conv1D_org_data":
             if org_data_only_process == 'Yes':
                 model_path = os.path.join(self.model_Conv1D_org_data_path, flt_path, 'process_model.h5')
@@ -156,6 +163,8 @@ class Config:
                 precision = flt_path + "process_Conv1D_precision"
                 recall = flt_path + "process_Conv1D_recall"
                 f1 = flt_path + "process_Conv1D_f1"
+                balanced_accuracy = flt_path + "process_Conv1D_balanced_accuracy"
+                roc = flt_path + "process_Conv1D_roc"
             else:
                 model_path = os.path.join(self.model_Conv1D_org_data_path, flt_path, 'process_task_model.h5')
                 loss_img = os.path.join(self.Conv1D_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
@@ -163,6 +172,8 @@ class Config:
                 precision = flt_path + "process_task_Conv1D_precision"
                 recall = flt_path + "process_task_Conv1D_recall"
                 f1 = flt_path + "process_task_Conv1D_f1"
+                balanced_accuracy = flt_path + "process_task_Conv1D_balanced_accuracy"
+                roc = flt_path + "process_task_Conv1D_roc"
         elif model_name == "ConvLSTM2D_org_data":
             if org_data_only_process == 'Yes':
                 model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, flt_path, 'process_model.h5')
@@ -171,6 +182,8 @@ class Config:
                 precision = flt_path + "process_ConvLSTM2D_precision"
                 recall = flt_path + "process_ConvLSTM2D_recall"
                 f1 = flt_path + "process_ConvLSTM2D_f1"
+                balanced_accuracy = flt_path + "process_ConvLSTM2D_balanced_accuracy"
+                roc = flt_path + "process_ConvLSTM2D_roc"
             else:
                 model_path = os.path.join(self.model_ConvLSTM2D_org_data_path, flt_path, 'process_task_model.h5')
                 loss_img = os.path.join(self.ConvLSTM2D_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
@@ -178,6 +191,8 @@ class Config:
                 precision = flt_path + "process_task_ConvLSTM2D_precision"
                 recall = flt_path + "process_task_ConvLSTM2D_recall"
                 f1 = flt_path + "process_task_ConvLSTM2D_f1"
+                balanced_accuracy = flt_path + "process_task_ConvLSTM2D_balanced_accuracy"
+                roc = flt_path + "process_task_ConvLSTM2D_roc"
         elif model_name == "LSTM_org_data":
             if org_data_only_process == 'Yes':
                 model_path = os.path.join(self.model_LSTM_org_data_path, flt_path, 'process_model.h5')
@@ -186,6 +201,8 @@ class Config:
                 precision = flt_path + "process_LSTM_precision"
                 recall = flt_path + "process_LSTM_recall"
                 f1 = flt_path + "process_LSTM_f1"
+                balanced_accuracy = flt_path + "process_LSTM_balanced_accuracy"
+                roc = flt_path + "process_LSTM_roc"
             else:
                 model_path = os.path.join(self.model_LSTM_org_data_path, flt_path, 'process_task_model.h5')
                 loss_img = os.path.join(self.LSTM_org_data_loss_acc_fig_path, flt_path, 'process_task_loss.png')
@@ -193,6 +210,8 @@ class Config:
                 precision = flt_path + "process_task_LSTM_precision"
                 recall = flt_path + "process_task_LSTM_recall"
                 f1 = flt_path + "process_task_LSTM_f1"
+                balanced_accuracy = flt_path + "process_task_LSTM_balanced_accuracy"
+                roc = flt_path + "process_task_LSTM_roc"
 
 
-        return model_path, loss_img, acc_img, precision, recall, f1
+        return model_path, loss_img, acc_img, precision, recall, f1, balanced_accuracy, roc
